@@ -9,21 +9,268 @@ description = "Production contract layer for RAG systems — typed, explicit, ob
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-  { name = "Sai Harsha Kondaveeti", email = "hello@saiharshakondaveeti.com" }
+    { name = "Sai Harsha Kondaveeti", email = "hello@saiharshakondaveeti.com" }
 ]
 requires-python = ">=3.11"
+
+# Core dependencies (always installed)
+dependencies = [
+    # Will depend on aiprims once it's published
+    # "aiprims>=0.1.0",
+]
+
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence",
-  "Typing :: Typed",
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
 ]
 
 [project.urls]
 Repository = "https://github.com/saiharsha-k/rag-axis"
 Documentation = "https://docs.saiharshakondaveeti.com"
 Changelog = "https://github.com/saiharsha-k/rag-axis/blob/main/CHANGELOG.md"
+
+# Optional dependency groups
+[project.optional-dependencies]
+
+# LLM adapters
+openai = [
+    "openai>=1.0.0",
+]
+anthropic = [
+    "anthropic>=0.40.0",
+]
+
+# Vector stores
+qdrant = [
+    "qdrant-client>=1.7.0",
+]
+weaviate = [
+    "weaviate-client>=4.0.0",
+]
+pgvector = [
+    "psycopg[binary]>=3.1.0",
+]
+
+# Embedders
+local = [
+    "sentence-transformers>=2.2.0",
+]
+
+# Database
+postgresql = [
+    "psycopg[binary]>=3.1.0",
+]
+
+# Retrieval
+bm25 = [
+    "rank-bm25>=0.2.2",
+]
+
+# Reranking
+rerank = [
+    "sentence-transformers>=2.2.0",
+]
+
+# Document extraction
+extraction = [
+    "pypdf>=4.0.0",
+    "beautifulsoup4>=4.12.0",
+    "markdown>=3.5.0",
+]
+
+# Telemetry
+telemetry = [
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+    "prometheus-client>=0.19.0",
+    "structlog>=24.0.0",
+]
+
+# Evaluation
+bench = [
+    "ragas>=0.1.0",  # optional bridge
+]
+
+# Server
+server = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.5.0",
+    "pyyaml>=6.0",
+]
+
+# Development
+dev = [
+    # Testing
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+
+    # Type checking
+    "mypy>=1.8.0",
+    "types-pyyaml",
+
+    # Linting/formatting
+    "ruff>=0.2.0",
+
+    # Pre-commit
+    "pre-commit>=3.6.0",
+
+    # Security
+    "pip-audit>=2.7.0",
+]
+
+# All extras for complete local dev
+all = [
+    "rag-axis[openai,anthropic,qdrant,weaviate,pgvector,local,postgresql,bm25,rerank,extraction,telemetry,bench,server,dev]",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["rag_axis*"]
+exclude = ["tests*", "docs*"]
+
+[tool.setuptools.package-data]
+rag_axis = ["py.typed"]
+
+# ==================== MYPY ====================
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+# Per-module options (for third-party libs without stubs)
+[[tool.mypy.overrides]]
+module = [
+    "qdrant_client.*",
+    "weaviate.*",
+    "rank_bm25.*",
+    "sentence_transformers.*",
+    "ragas.*",
+]
+ignore_missing_imports = true
+
+# ==================== RUFF ====================
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "ANN",    # flake8-annotations
+    "ASYNC",  # flake8-async
+    "S",      # flake8-bandit
+    "B",      # flake8-bugbear
+    "A",      # flake8-builtins
+    "C4",     # flake8-comprehensions
+    "DTZ",    # flake8-datetimez
+    "T10",    # flake8-debugger
+    "EM",     # flake8-errmsg
+    "FA",     # flake8-future-annotations
+    "ISC",    # flake8-implicit-str-concat
+    "ICN",    # flake8-import-conventions
+    "G",      # flake8-logging-format
+    "PIE",    # flake8-pie
+    "T20",    # flake8-print
+    "PT",     # flake8-pytest-style
+    "Q",      # flake8-quotes
+    "RET",    # flake8-return
+    "SLF",    # flake8-self
+    "SLOT",   # flake8-slots
+    "SIM",    # flake8-simplify
+    "TID",    # flake8-tidy-imports
+    "TCH",    # flake8-type-checking
+    "ARG",    # flake8-unused-arguments
+    "PTH",    # flake8-use-pathlib
+    "ERA",    # eradicate
+    "PL",     # pylint
+    "TRY",    # tryceratops
+    "FLY",    # flynt
+    "PERF",   # perflint
+    "RUF",    # ruff-specific
+]
+
+ignore = [
+    "S101",    # use of assert (we use it in tests)
+    "PLR0913", # too-many-arguments (sometimes necessary)
+    "TRY003",  # raise-vanilla-args (we use custom error messages)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",    # assert allowed in tests
+    "ANN",     # no type hints required in tests
+    "ARG",     # unused arguments ok in test fixtures
+    "PLR2004", # magic values ok in tests
+]
+
+# ==================== PYTEST ====================
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=rag_axis",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-fail-under=80",
+]
+markers = [
+    "unit: Unit tests (fast, no external dependencies)",
+    "integration: Integration tests (require external services)",
+    "slow: Slow tests (long-running)",
+]
+
+# ==================== COVERAGE ====================
+[tool.coverage.run]
+source = ["rag_axis"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+# ==================== BANDIT ====================
+[tool.bandit]
+exclude_dirs = ["tests"]
