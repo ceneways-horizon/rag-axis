@@ -14,10 +14,10 @@ pytest tests/
 pytest tests/path/to/test_file.py::test_name  # single test
 
 # Type checking
-mypy rag_axis/
+mypy src/ragaxis/
 
 # Linting
-ruff check rag_axis/
+ruff check src/ragaxis/
 ```
 
 CI runs `pytest` and `python -m build` on every push and PR. Publishing to PyPI is triggered by version tags (`v*`) and uses OIDC Trusted Publishing.
@@ -40,36 +40,36 @@ Every sub-package belongs to exactly one:
 
 ```
 Phase 0 — Foundation
-  rag_axis.core       Document, Chunk, RetrievalResult, CostReport, ContextBudget,
+  ragaxis.core       Document, Chunk, RetrievalResult, CostReport, ContextBudget,
                       PipelineResult, named error types
-  rag_axis.adapters   LLMAdapter, EmbedderAdapter, VectorStoreAdapter Protocols
+  ragaxis.adapters   LLMAdapter, EmbedderAdapter, VectorStoreAdapter Protocols
                       + reference implementations
 
 Phase 1 — Pre-Retrieval
-  rag_axis.ingestion  Loaders, parsers, metadata, document registry
-  rag_axis.chunking   Fixed, semantic, structural, parent-child strategies
-  rag_axis.embedding  Batch embedding, cost tracking, model version lock
+  ragaxis.ingestion  Loaders, parsers, metadata, document registry
+  ragaxis.chunking   Fixed, semantic, structural, parent-child strategies
+  ragaxis.embedding  Batch embedding, cost tracking, model version lock
 
 Phase 2 — Retrieval Core
-  rag_axis.retrieval  Dense, sparse, hybrid RRF (k=60 default), metadata filters
-  rag_axis.reranking  Cross-encoder, score normalisation, ScoreCollapseWarning
-  rag_axis.context    Budget enforcement, truncation, deduplication, ordering, provenance
-  rag_axis.generation Prompt assembly, LLM call, output parsing, citation injection
+  ragaxis.retrieval  Dense, sparse, hybrid RRF (k=60 default), metadata filters
+  ragaxis.reranking  Cross-encoder, score normalisation, ScoreCollapseWarning
+  ragaxis.context    Budget enforcement, truncation, deduplication, ordering, provenance
+  ragaxis.generation Prompt assembly, LLM call, output parsing, citation injection
 
 Phase 3 — System Layer
-  rag_axis.guards     Input/output guards, fallback strategies
-  rag_axis.cache      Semantic, exact, embedding cache
-  rag_axis.telemetry  OTel spans (non-optional), cost aggregation, structlog
-  rag_axis.bench      EvaluationHook Protocol, RAGAS/DeepEval/TruLens bridges
+  ragaxis.guards     Input/output guards, fallback strategies
+  ragaxis.cache      Semantic, exact, embedding cache
+  ragaxis.telemetry  OTel spans (non-optional), cost aggregation, structlog
+  ragaxis.bench      EvaluationHook Protocol, RAGAS/DeepEval/TruLens bridges
 
 Phase 4 — Advanced
-  rag_axis.corpus     Versioning, staleness, incremental updates, model migration
-  rag_axis.knowledge  GraphRAG, entity extraction, multi-hop traversal
+  ragaxis.corpus     Versioning, staleness, incremental updates, model migration
+  ragaxis.knowledge  GraphRAG, entity extraction, multi-hop traversal
 ```
 
 ### One-Way Dependency Rules
 
-Violations are rejected at PR review. The critical constraint: `rag_axis.core` depends only on `aiprims.rag`, `aiprims.core`, and pydantic. It has **zero** provider-specific runtime dependencies.
+Violations are rejected at PR review. The critical constraint: `ragaxis.core` depends only on `aiprims.rag`, `aiprims.core`, and pydantic. It has **zero** provider-specific runtime dependencies.
 
 `aiprims` is a separate library. rag-axis uses two of its subpackages:
 - `aiprims.core` — deterministic run identity (chunk IDs, run tracing, corpus versioning)
@@ -94,7 +94,7 @@ All adapters (`LLMAdapter`, `EmbedderAdapter`, `VectorStoreAdapter`) are `typing
 
 ### Error Handling
 
-- Base RAG errors come from `aiprims.rag`. Pipeline-specific compound errors live in `rag_axis.core.errors`.
+- Base RAG errors come from `aiprims.rag`. Pipeline-specific compound errors live in `ragaxis.core.errors`.
 - No adapter may suppress a provider error into generic `Exception`. Always type errors: `RateLimitError`, `ContextLengthError`, `ProviderSchemaError`, `TransportError`.
 
 ### Result Objects
@@ -107,7 +107,7 @@ Every pipeline result carries a `CostReport` (tokens per stage, latency per stag
 - **I2**: No silent truncation — `ContextTruncationEvent` emitted if context is dropped
 - **I3**: Every `RetrievalResult` has a confidence signal or `ConfidenceUnknown`
 - **I4**: No adapter suppresses a provider error into generic `Exception`
-- **I5**: `rag_axis.core` has zero provider-specific runtime dependencies
+- **I5**: `ragaxis.core` has zero provider-specific runtime dependencies
 - **I6**: No circular imports — dependency direction is strictly one-way
 - **I7**: No in-place mutation of result objects after construction
 

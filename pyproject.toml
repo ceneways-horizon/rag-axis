@@ -133,12 +133,12 @@ all = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["rag_axis*"]
+where = ["src"]
+include = ["ragaxis*"]
 exclude = ["tests*", "docs*"]
 
 [tool.setuptools.package-data]
-rag_axis = ["py.typed"]
+ragaxis = ["py.typed"]
 
 # ==================== MYPY ====================
 [tool.mypy]
@@ -228,6 +228,58 @@ ignore = [
     "ARG",     # unused arguments ok in test fixtures
     "PLR2004", # magic values ok in tests
 ]
+"src/ragaxis/**/_types/contracts.py" = [
+    "ERA001",  # commented-out code: inline field docs are intentional spec annotations
+]
+"src/ragaxis/system/_types/contracts.py" = [
+    "ERA001",  # commented-out code: inline field docs are intentional spec annotations
+]
+"src/ragaxis/**/_errors/exceptions.py" = [
+    "N818",    # *Warning suffix: DegradedError subclasses intentionally named *Warning (by design)
+    "E501",    # long lines in message pattern docstrings are intentional for readability
+]
+"src/ragaxis/bench/fixtures.py" = [
+    "A002",    # id argument shadows builtin: intentional — mirrors Chunk.id field name
+]
+# Stub files and protocols: all methods raise NotImplementedError intentionally
+"src/ragaxis/adapters/**/*.py" = [
+    "ANN101",  # self annotation not required in stubs
+    "ARG001",  # unused args in NotImplementedError stubs are correct
+]
+"src/ragaxis/core/_protocols/adapters.py" = [
+    "ANN101",  # self annotation not required in Protocol method stubs
+]
+"src/ragaxis/core/_errors/exceptions.py" = [
+    "ANN101",  # self annotation on __str__ in frozen dataclass exceptions
+]
+"src/ragaxis/**/[!_]*.py" = []  # placeholder — real module stubs
+"src/ragaxis/core/ingestion.py" = ["ARG001"]
+"src/ragaxis/core/chunking.py" = ["ARG001"]
+"src/ragaxis/core/corpus.py" = ["ARG001"]
+"src/ragaxis/bench/metrics.py" = ["ARG001"]
+"src/ragaxis/retrieval/dense.py" = ["ARG001"]
+"src/ragaxis/retrieval/sparse.py" = ["ARG001"]
+"src/ragaxis/retrieval/hybrid.py" = ["ARG001"]
+"src/ragaxis/retrieval/validation.py" = ["ARG001"]
+"src/ragaxis/retrieval/scoring.py" = ["ARG001"]
+"src/ragaxis/synthesis/context.py" = ["ARG001"]
+"src/ragaxis/synthesis/reranking.py" = ["ARG001"]
+"src/ragaxis/synthesis/generation.py" = ["ARG001"]
+"src/ragaxis/synthesis/guards.py" = ["ARG001"]
+"src/ragaxis/system/pipeline.py" = ["ARG001", "ANN101"]
+"src/ragaxis/system/executor.py" = ["ARG001"]
+"src/ragaxis/system/result.py" = ["ARG001"]
+"src/ragaxis/corpus/versioning.py" = ["ARG001"]
+"src/ragaxis/knowledge/registry.py" = ["ARG001"]
+"src/ragaxis/otel/spans.py" = ["ARG001"]
+"src/ragaxis/otel/hooks.py" = ["ARG001"]
+"src/ragaxis/otel/config.py" = ["ARG001"]
+"src/ragaxis/ldk/index.py" = ["ARG001"]
+"src/ragaxis/ldk/retrieval.py" = ["ARG001"]
+"src/ragaxis/ldk/synthesis.py" = ["ARG001"]
+"src/ragaxis/ldk/pipeline.py" = ["ARG001"]
+"src/ragaxis/server/**/*.py" = ["ARG001"]
+"src/ragaxis/adapters/embedding/base.py" = ["ARG001"]
 
 # ==================== PYTEST ====================
 [tool.pytest.ini_options]
@@ -239,7 +291,7 @@ python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov=rag_axis",
+    "--cov=ragaxis",
     "--cov-report=term-missing",
     "--cov-report=html",
     "--cov-fail-under=80",
@@ -252,7 +304,7 @@ markers = [
 
 # ==================== COVERAGE ====================
 [tool.coverage.run]
-source = ["rag_axis"]
+source = ["ragaxis"]
 omit = [
     "*/tests/*",
     "*/__pycache__/*",

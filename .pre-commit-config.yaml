@@ -17,7 +17,7 @@ repos:
         args: [--strict, --show-error-codes]
         additional_dependencies:
           - types-pyyaml
-        files: ^rag_axis/
+        files: ^src/ragaxis/
 
   # Basic file hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks

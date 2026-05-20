@@ -12,16 +12,16 @@ check: typecheck lint format test security
 	@cmd /c echo All checks passed.
 
 typecheck:
-	$(MYPY) --strict rag_axis/
+	$(MYPY) --strict src/ragaxis/
 
 lint:
-	$(RUFF) check rag_axis/ tests/
+	$(RUFF) check src/ragaxis/ tests/
 
 format:
-	$(RUFF) format --check rag_axis/ tests/
+	$(RUFF) format --check src/ragaxis/ tests/
 
 test:
-	$(PYTEST) tests/ --cov=rag_axis --cov-fail-under=80
+	$(PYTEST) tests/ --cov=ragaxis --cov-fail-under=80
 
 security:
 	$(VENV)/Scripts/pip-audit.exe
