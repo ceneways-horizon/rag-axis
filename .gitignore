@@ -99,3 +99,5 @@ ragaxis.db
 ragaxis.yaml
 /server/dashboard/build/
 /server/dashboard/node_modules/
+dashboard/node_modules/
+dashboard/dist/
