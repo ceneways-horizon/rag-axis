@@ -1,8 +1,3 @@
-"""
-ragaxis.server: Self-hosted RAG subsystem (REST/gRPC).
+"""ragaxis.server: Self-hosted RAG subsystem REST API."""
 
-Wraps all layers behind HTTP endpoints.
-Ships post-v1.0 once all layers are stable.
-
-Phase: v2.0+
-"""
+from __future__ import annotations
