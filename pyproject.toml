@@ -103,6 +103,10 @@ server = [
     "uvicorn[standard]>=0.27.0",
     "pydantic>=2.5.0",
     "pyyaml>=6.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.13.0",
+    "pydantic-settings>=2.1.0",
+    "python-multipart>=0.0.9",
 ]
 
 # Development
@@ -125,6 +129,9 @@ dev = [
 
     # Security
     "pip-audit>=2.7.0",
+
+    # HTTP testing client
+    "httpx>=0.26.0",
 ]
 
 # All extras for complete local dev
