@@ -1,0 +1,107 @@
+site_name: rag-axis Internal Docs
+docs_dir: ../..
+site_dir: ../../site-internal
+
+# Only internal/ and shared/ — never public/
+nav:
+  - Start Here: internal/index.md
+  - Reference: internal/reference.md
+  - Packages Reference: internal/packages-reference.md
+
+  - Shared:
+    - Invariants (I1-I7): shared/invariants.md
+    - Architecture: shared/architecture.md
+    - Packages: shared/packages.md
+    - Philosophy: shared/philosophy.md
+    - Glossary: shared/glossary.md
+    - Design Principles: shared/design-principles.md
+    - Non-Goals: shared/non-goals.md
+    - Package Map: shared/package-map.md
+    - Full Architecture: shared/full-architecture.md
+
+  - Design Decisions (ADRs):
+    - How to Write an ADR: internal/design-decisions/adr-README.md
+    - ADR Template: internal/design-decisions/adr-template.md
+    - "ADR-0001: Frozen Dataclasses": internal/design-decisions/adr-0001-frozen-dataclasses.md
+    - "ADR-0002: Protocol Adapters": internal/design-decisions/adr-0002-protocol-adapters.md
+    - "ADR-0003: RRF Hybrid Fusion": internal/design-decisions/adr-0003-rrf-hybrid-fusion.md
+    - "ADR-0004: OTel Native": internal/design-decisions/adr-0004-otel-native.md
+    - "ADR-0005: aiprims.rag Errors": internal/design-decisions/adr-0005-aiprims-rag-errors.md
+
+  - Phase Roadmap:
+    - Overview: internal/phase-roadmap/overview.md
+    - Phase 0 — Index Layer: internal/phase-roadmap/phase-0-index-layer.md
+    - Phase 1 — Retrieval Layer: internal/phase-roadmap/phase-1-retrieval-layer.md
+    - Phase 2 — Synthesis Layer: internal/phase-roadmap/phase-2-synthesis-layer.md
+    - Phase 3 — System Orchestration: internal/phase-roadmap/phase-3-system-orchestration.md
+
+  - Contracts:
+    - Types: internal/contracts/types.md
+    - Errors: internal/contracts/errors.md
+    - Adapters: internal/contracts/adapters.md
+    - Audit Trails: internal/contracts/audit-trails.md
+    - Configuration: internal/contracts/configuration.md
+    - Reproducibility: internal/contracts/reproducibility.md
+    - Relationship Graph: internal/contracts/relationship-graph.md
+
+  - Stub Specifications:
+    - Core Stubs: internal/stub-specifications/core-stubs.md
+    - Retrieval Stubs: internal/stub-specifications/retrieval-stubs.md
+    - Synthesis Stubs: internal/stub-specifications/synthesis-stubs.md
+    - System Stubs: internal/stub-specifications/system-stubs.md
+    - Adapter Stubs: internal/stub-specifications/adapters-stubs.md
+    - Stub Checklist: internal/stub-specifications/stub-checklist.md
+
+  - Testing Strategy:
+    - Overview: internal/testing-strategy/overview.md
+    - Phase 0 Acceptance: internal/testing-strategy/phase-0-acceptance.md
+    - Phase 1 Acceptance: internal/testing-strategy/phase-1-acceptance.md
+    - Phase 2 Acceptance: internal/testing-strategy/phase-2-acceptance.md
+    - Phase 3 Acceptance: internal/testing-strategy/phase-3-acceptance.md
+    - Fixtures: internal/testing-strategy/fixtures.md
+    - Mocking Strategy: internal/testing-strategy/mocking-strategy.md
+    - Integration Tests: internal/testing-strategy/integration-tests.md
+
+  - Debug Guides:
+    - Type Errors: internal/debug-guides/type-errors.md
+    - Provenance Errors: internal/debug-guides/provenance-errors.md
+    - Adapter Debugging: internal/debug-guides/adapter-debugging.md
+    - Score Collapse: internal/debug-guides/score-collapse.md
+    - Embedder Mismatch: internal/debug-guides/embedder-mismatch.md
+    - Truncation Audit: internal/debug-guides/truncation-audit.md
+    - Cost Tracking: internal/debug-guides/cost-tracking.md
+
+  - API Sketches:
+    - Core API: internal/api-sketches/core-api.md
+    - Retrieval API: internal/api-sketches/retrieval-api.md
+    - Synthesis API: internal/api-sketches/synthesis-api.md
+    - System API: internal/api-sketches/system-api.md
+    - Adapters API: internal/api-sketches/adapters-api.md
+
+  - Checklists:
+    - Pre-Merge: internal/checklists/pre-merge-checklist.md
+    - Phase Completion: internal/checklists/phase-completion-checklist.md
+    - Invariant Validation: internal/checklists/invariant-validation.md
+    - Contract Enforcement: internal/checklists/contract-enforcement.md
+
+  - Notes:
+    - Kickoff 2026-05-20: internal/notes/2026-05-20-kickoff.md
+    - Open Questions: internal/notes/open-questions.md
+    - Decisions Log: internal/notes/decisions-log.md
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.tabs
+    - navigation.expand
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true

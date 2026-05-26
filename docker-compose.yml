@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - RAGAXIS_DATABASE_URL=sqlite:///./rag-axis.db
+      - RAGAXIS_DEBUG=true
+    volumes:
+      - ./rag-axis.db:/app/rag-axis.db
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./dashboard:/app
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend

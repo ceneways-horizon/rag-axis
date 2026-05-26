@@ -1,6 +1,5 @@
 import rag_axis
-print(rag_axis.__version__)
 
 
-def test_placeholder():
-    assert True
+def test_placeholder() -> None:
+    assert rag_axis.__version__ == "0.0.1"
