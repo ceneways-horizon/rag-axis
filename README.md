@@ -1,6 +1,3 @@
-You're right. Let me follow the template structure properly:
-
-```markdown
 # rag-axis
 
 Production contract layer for RAG systems. Typed. Explicit. Observable. Composable.
@@ -381,10 +378,3 @@ If you use rag-axis in research or production, please cite:
 **Built for production. Built to last. Built by engineers who care about truth.**
 
 Ceneways Horizon — [ragaxis.dev](https://ragaxis.dev)
-```
-
----
-
-This now follows the template structure exactly: product intro → key features → quick start → docs → philosophy → use cases → setup → benchmarks → architecture → contributing → troubleshooting → performance/cost → roadmap → FAQ → support → license → author → acknowledgments → citation.
-
-Ready to commit?
