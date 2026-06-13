@@ -31,9 +31,10 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/saiharsha-k/rag-axis"
-Documentation = "https://docs.saiharshakondaveeti.com"
-Changelog = "https://github.com/saiharsha-k/rag-axis/blob/main/CHANGELOG.md"
+Homepage = "https://ragaxis.cenewayshorizon.com"
+Repository = "https://github.com/ceneways-horizon/rag-axis"
+Documentation = "https://ragaxis.cenewayshorizon.com"
+Changelog = "https://github.com/ceneways-horizon/rag-axis/blob/main/CHANGELOG.md"
 
 # Optional dependency groups
 [project.optional-dependencies]

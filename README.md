@@ -6,7 +6,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/rag-axis.svg)](https://pypi.org/project/rag-axis)
 [![Python](https://img.shields.io/pypi/pyversions/rag-axis.svg)](https://pypi.org/project/rag-axis)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-docs.saiharshakondaveeti.com-blue)](https://docs.saiharshakondaveeti.com)
+[![Docs](https://img.shields.io/badge/docs-ragaxis.cenewayshorizon.com-blue)](https://ragaxis.cenewayshorizon.com)
 
 ---
 
@@ -84,7 +84,7 @@ If you need something you can trust in production, use rag-axis.
 ## Documentation
 
 Full documentation, architecture, design principles, and invariants:  
-[docs.saiharshakondaveeti.com](https://docs.saiharshakondaveeti.com)
+[ragaxis.cenewayshorizon.com](https://ragaxis.cenewayshorizon.com)
 
 Architecture overview: [ARCHITECTURE.md](ARCHITECTURE.md)
 
