@@ -65,7 +65,7 @@ export function Projects() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map(project => (
             <Link key={project.id} to={`/projects/${project.id}`} className="block">
-              <Card className="hover:border-info/40 transition-colors h-full">
+              <Card className="hover:border-accent/40 transition-colors h-full">
                 <Card.Body>
                   <div className="mb-3">
                     <h2 className="font-semibold text-text-primary">{project.name}</h2>
@@ -100,7 +100,7 @@ export function Projects() {
               value={form.name}
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               placeholder="My RAG Project"
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent"
               autoFocus
             />
           </div>
@@ -111,7 +111,7 @@ export function Projects() {
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
               placeholder="Optional description..."
               rows={3}
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info resize-none"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent resize-none"
             />
           </div>
         </div>

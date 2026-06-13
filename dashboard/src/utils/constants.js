@@ -18,7 +18,7 @@ export const STATUS_COLORS = {
 export const TOAST_DURATION = 3500
 
 export const RECHARTS_COLORS = {
-  primary: '#4285f4',
+  primary: '#e63946',
   success: '#34a853',
   error: '#ea4335',
   warning: '#fbbc04',

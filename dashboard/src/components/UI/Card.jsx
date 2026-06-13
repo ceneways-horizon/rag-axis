@@ -1,7 +1,7 @@
 export function Card({ children, className = '', onClick }) {
   return (
     <div
-      className={`bg-bg-secondary rounded-lg border border-border-color ${onClick ? 'cursor-pointer hover:border-info/50 transition-colors' : ''} ${className}`}
+      className={`bg-bg-secondary rounded-lg border border-border-color ${onClick ? 'cursor-pointer hover:border-accent/50 transition-colors' : ''} ${className}`}
       onClick={onClick}
     >
       {children}

@@ -9,7 +9,7 @@ export function Tabs({ tabs, activeTab, onTabChange, children }) {
             className={`
               px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px
               ${activeTab === tab.id
-                ? 'border-info text-info'
+                ? 'border-accent text-accent'
                 : 'border-transparent text-text-secondary hover:text-text-primary hover:border-border-color'
               }
             `}

@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #0f1419;
-  --bg-secondary: #1a1f26;
-  --bg-tertiary: #242b35;
-  --border: #2d3748;
+  --bg-primary: #000000;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1f1f1f;
+  --border: #2e2e2e;
   --text-primary: #e8eaed;
   --text-secondary: #9aa0a6;
   --text-muted: #5f6368;
@@ -15,6 +15,7 @@
   --color-warning: #fbbc04;
   --color-info: #4285f4;
   --color-cost: #ff6d00;
+  --color-accent: #e63946;
 }
 
 body {
