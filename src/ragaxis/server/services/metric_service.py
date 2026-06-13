@@ -1,21 +1,21 @@
 from __future__ import annotations
 
 import json
-
-from sqlalchemy.orm import Session
+from typing import TYPE_CHECKING
 
 from ragaxis.server.database.models import Run
 from ragaxis.server.services.base_service import BaseService
 from ragaxis.server.services.experiment_service import ExperimentService
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
 
 
 class MetricService(BaseService):
     def __init__(self, db: Session) -> None:
         super().__init__(db)
 
-    def get_experiment_metrics(
-        self, project_id: str, experiment_id: str
-    ) -> dict:  # type: ignore[type-arg]
+    def get_experiment_metrics(self, project_id: str, experiment_id: str) -> dict:  # type: ignore[type-arg]
         exp_svc = ExperimentService(self.db)
         exp_svc.get_by_id(project_id, experiment_id)
 

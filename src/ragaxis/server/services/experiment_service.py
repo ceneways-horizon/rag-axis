@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import json
 import uuid
-from datetime import datetime, timezone
-
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from ragaxis.server.database.models import Corpus, Experiment, Project, Run
 from ragaxis.server.services.base_service import BaseService
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
 
 
 class ExperimentService(BaseService):
@@ -17,7 +19,8 @@ class ExperimentService(BaseService):
     def _get_project(self, project_id: str) -> Project:
         project = self.db.query(Project).filter(Project.id == project_id).first()
         if project is None:
-            raise KeyError(f"Project '{project_id}' not found")
+            msg = f"Project '{project_id}' not found"
+            raise KeyError(msg)
         return project
 
     def _get_corpus(self, project_id: str, corpus_id: str) -> Corpus:
@@ -27,7 +30,8 @@ class ExperimentService(BaseService):
             .first()
         )
         if corpus is None:
-            raise KeyError(f"Corpus '{corpus_id}' not found in project '{project_id}'")
+            msg = f"Corpus '{corpus_id}' not found in project '{project_id}'"
+            raise KeyError(msg)
         return corpus
 
     def create(
@@ -40,7 +44,7 @@ class ExperimentService(BaseService):
     ) -> Experiment:
         self._get_project(project_id)
         self._get_corpus(project_id, corpus_id)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         exp = Experiment(
             id=str(uuid.uuid4()),
             project_id=project_id,
@@ -74,14 +78,19 @@ class ExperimentService(BaseService):
             .first()
         )
         if exp is None:
-            raise KeyError(f"Experiment '{experiment_id}' not found in project '{project_id}'")
+            msg = f"Experiment '{experiment_id}' not found in project '{project_id}'"
+            raise KeyError(msg)
         return exp
 
     def create_run(
-        self, project_id: str, experiment_id: str, query: str, run_data: dict  # type: ignore[type-arg]
+        self,
+        project_id: str,
+        experiment_id: str,
+        query: str,
+        run_data: dict,  # type: ignore[type-arg]
     ) -> Run:
         exp = self.get_by_id(project_id, experiment_id)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         run = Run(
             id=str(uuid.uuid4()),
             experiment_id=exp.id,
@@ -123,5 +132,6 @@ class ExperimentService(BaseService):
             .first()
         )
         if run is None:
-            raise KeyError(f"Run '{run_id}' not found")
+            msg = f"Run '{run_id}' not found"
+            raise KeyError(msg)
         return run

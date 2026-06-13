@@ -1,5 +1,5 @@
-import rag_axis
+import ragaxis
 
 
 def test_placeholder() -> None:
-    assert rag_axis.__version__ == "0.0.1"
+    assert ragaxis.__version__ == "0.1.0"

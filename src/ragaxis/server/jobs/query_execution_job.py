@@ -2,8 +2,16 @@ from __future__ import annotations
 
 import logging
 import uuid
-from datetime import datetime, timezone
-from typing import Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING, Any
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from ragaxis.server.services.experiment_service import ExperimentService
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine import URL
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +23,7 @@ _MOCK_TOTAL_COST_USD = 0.0034
 
 
 def _build_mock_result(query: str) -> dict[str, Any]:
-    now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
+    now_ms = int(datetime.now(UTC).timestamp() * 1000)
     return {
         "answer": f"Based on the retrieved context: [mock answer for: {query}]",
         "citations": [
@@ -66,18 +74,14 @@ def run_query_execution_job(
     project_id: str,
     experiment_id: str,
     query: str,
-    db_url: Any,
+    db_url: URL | str,
 ) -> None:
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker
-
-    from ragaxis.server.services.experiment_service import ExperimentService
-
     connect_args = {"check_same_thread": False} if str(db_url).startswith("sqlite") else {}
     engine = create_engine(str(db_url), connect_args=connect_args)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    # SQLAlchemy convention name
+    session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-    with SessionLocal() as session:
+    with session_local() as session:
         svc = ExperimentService(session)
         try:
             run_data = _build_mock_result(query)
@@ -87,5 +91,5 @@ def run_query_execution_job(
                 experiment_id,
                 query[:40],
             )
-        except Exception:  # noqa: BLE001
+        except Exception:
             logger.exception("Failed to execute query for experiment %s", experiment_id)

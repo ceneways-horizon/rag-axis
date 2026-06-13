@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
-from fastapi.testclient import TestClient
+
+if TYPE_CHECKING:
+    from fastapi.testclient import TestClient
 
 
 def _make_project(client: TestClient) -> str:
@@ -16,7 +20,9 @@ def _make_corpus(client: TestClient, project_id: str) -> str:
     return resp.json()["id"]
 
 
-def _make_experiment(client: TestClient, project_id: str, corpus_id: str, name: str = "Exp1") -> str:
+def _make_experiment(
+    client: TestClient, project_id: str, corpus_id: str, name: str = "Exp1"
+) -> str:
     resp = client.post(
         f"/api/projects/{project_id}/experiments",
         json={"name": name, "corpus_id": corpus_id, "config": {"top_k": 5}},

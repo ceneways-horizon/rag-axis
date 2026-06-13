@@ -1,17 +1,16 @@
 from __future__ import annotations
 
-from pydantic import ConfigDict
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class ServerConfig(BaseSettings):
     database_url: str = "sqlite:///./rag-axis.db"
-    host: str = "0.0.0.0"
+    host: str = "0.0.0.0"  # noqa: S104 - intentional default bind for containerized deployment, override via env var
     port: int = 8000
     debug: bool = False
     cors_origins: list[str] = ["*"]
 
-    model_config = ConfigDict(env_prefix="RAGAXIS_")
+    model_config = SettingsConfigDict(env_prefix="RAGAXIS_")
 
 
 _config: ServerConfig | None = None

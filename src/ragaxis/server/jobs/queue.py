@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 _jobs: dict[str, dict[str, Any]] = {}
@@ -14,7 +14,7 @@ def create_job(job_type: str, payload: dict[str, Any]) -> str:
         "type": job_type,
         "payload": payload,
         "status": "queued",
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": datetime.now(UTC).isoformat(),
     }
     return job_id
 

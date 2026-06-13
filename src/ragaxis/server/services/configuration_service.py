@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import json
 import uuid
-from datetime import datetime, timezone
-
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from ragaxis.server.database.models import Configuration, Project
 from ragaxis.server.services.base_service import BaseService
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
 
 
 class ConfigurationService(BaseService):
@@ -17,7 +19,8 @@ class ConfigurationService(BaseService):
     def _get_project(self, project_id: str) -> Project:
         project = self.db.query(Project).filter(Project.id == project_id).first()
         if project is None:
-            raise KeyError(f"Project '{project_id}' not found")
+            msg = f"Project '{project_id}' not found"
+            raise KeyError(msg)
         return project
 
     def create(
@@ -28,7 +31,7 @@ class ConfigurationService(BaseService):
         config: dict,  # type: ignore[type-arg]
     ) -> Configuration:
         self._get_project(project_id)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         cfg = Configuration(
             id=str(uuid.uuid4()),
             project_id=project_id,
@@ -61,14 +64,13 @@ class ConfigurationService(BaseService):
             .first()
         )
         if cfg is None:
-            raise KeyError(
-                f"Configuration '{config_id}' not found in project '{project_id}'"
-            )
+            msg = f"Configuration '{config_id}' not found in project '{project_id}'"
+            raise KeyError(msg)
         return cfg
 
     def promote(self, project_id: str, config_id: str) -> Configuration:
         cfg = self.get_by_id(project_id, config_id)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         cfg.status = "production"
         cfg.promoted_at = now
         cfg.updated_at = now

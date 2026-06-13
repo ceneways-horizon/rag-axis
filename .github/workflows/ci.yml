@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [ main, dev ]
+    tags:
+      - "v*"
   pull_request:
     branches: [ main, dev ]
   workflow_dispatch:
@@ -34,7 +36,7 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Run mypy (strict mode)
-        run: mypy rag_axis --strict --show-error-codes
+        run: mypy src/ragaxis --strict --show-error-codes
 
   # ==================== LINTING ====================
   lint:
@@ -55,10 +57,10 @@ jobs:
         run: pip install ruff
 
       - name: Run ruff check
-        run: ruff check rag_axis tests
+        run: ruff check src/ragaxis tests
 
       - name: Run ruff format check
-        run: ruff format --check rag_axis tests
+        run: ruff format --check src/ragaxis tests
 
   # ==================== TESTS ====================
   test:
@@ -87,7 +89,7 @@ jobs:
 
       - name: Run pytest
         run: |
-          pytest -v --cov=rag_axis --cov-report=xml --cov-report=term-missing --cov-fail-under=80
+          pytest -v --cov=ragaxis --cov-report=xml --cov-report=term-missing --cov-fail-under=80
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11'
@@ -156,3 +158,29 @@ jobs:
 
       - name: All checks passed
         run: echo "✅ All CI checks passed!"
+
+  # ==================== PUBLISH TO PYPI ====================
+  publish:
+    name: Publish to PyPI
+    needs: all-checks
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build package
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
-from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from starlette.responses import Response
+
+if TYPE_CHECKING:
+    from fastapi import Request
+    from starlette.responses import Response
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +29,7 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
                 status_code=404,
                 content={"error": {"code": "NOT_FOUND", "message": str(exc), "details": {}}},
             )
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             logger.exception("Unhandled server error")
             return JSONResponse(
                 status_code=500,
