@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ragaxis.server.api.middleware.error_handler import ErrorHandlerMiddleware
 from ragaxis.server.api.middleware.request_logger import RequestLoggerMiddleware
-from ragaxis.server.api.routes import health, projects, knowledge, experiments, configurations
+from ragaxis.server.api.routes import configurations, experiments, health, knowledge, projects
 from ragaxis.server.config import get_config
 from ragaxis.server.database.session import init_db
 

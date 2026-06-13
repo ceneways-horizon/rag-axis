@@ -96,7 +96,7 @@ export function Experiments() {
               value={form.name}
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               placeholder="Hybrid Retrieval v1"
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent"
               autoFocus
             />
           </div>
@@ -107,7 +107,7 @@ export function Experiments() {
               value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
               placeholder="Optional description"
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent"
             />
           </div>
           <div>
@@ -115,7 +115,7 @@ export function Experiments() {
             <select
               value={form.corpus_id}
               onChange={e => setForm(f => ({ ...f, corpus_id: e.target.value }))}
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-info"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
             >
               <option value="">Select corpus...</option>
               {corpora.map(c => (
@@ -129,7 +129,7 @@ export function Experiments() {
               value={form.config}
               onChange={e => setForm(f => ({ ...f, config: e.target.value }))}
               rows={4}
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary font-mono focus:outline-none focus:border-info resize-none"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary font-mono focus:outline-none focus:border-accent resize-none"
             />
           </div>
         </div>

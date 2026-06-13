@@ -2,16 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
-
-from sqlalchemy.orm import Session
 
 from ragaxis.server.database.models import Corpus, Document, Project
 from ragaxis.server.services.base_service import BaseService
 
 if TYPE_CHECKING:
-    from fastapi import UploadFile
+    from sqlalchemy.orm import Session
 
 
 class KnowledgeService(BaseService):
@@ -21,7 +19,8 @@ class KnowledgeService(BaseService):
     def _get_project(self, project_id: str) -> Project:
         project = self.db.query(Project).filter(Project.id == project_id).first()
         if project is None:
-            raise KeyError(f"Project '{project_id}' not found")
+            msg = f"Project '{project_id}' not found"
+            raise KeyError(msg)
         return project
 
     def create_corpus(
@@ -32,7 +31,7 @@ class KnowledgeService(BaseService):
         embedding_model_version: str | None,
     ) -> Corpus:
         self._get_project(project_id)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         corpus = Corpus(
             id=str(uuid.uuid4()),
             project_id=project_id,
@@ -65,7 +64,8 @@ class KnowledgeService(BaseService):
             .first()
         )
         if corpus is None:
-            raise KeyError(f"Corpus '{corpus_id}' not found in project '{project_id}'")
+            msg = f"Corpus '{corpus_id}' not found in project '{project_id}'"
+            raise KeyError(msg)
         return corpus
 
     def upload_documents(
@@ -75,7 +75,7 @@ class KnowledgeService(BaseService):
         files_data: list[tuple[str, int, bytes]],
     ) -> list[Document]:
         corpus = self.get_corpus(project_id, corpus_id)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         docs = []
         for filename, size, content in files_data:
             content_hash = hashlib.sha256(content).hexdigest()
@@ -112,12 +112,13 @@ class KnowledgeService(BaseService):
             .first()
         )
         if doc is None:
-            raise KeyError(f"Document '{document_id}' not found in project '{project_id}'")
+            msg = f"Document '{document_id}' not found in project '{project_id}'"
+            raise KeyError(msg)
         self.db.delete(doc)
         self.db.commit()
 
     def mark_documents_indexed(self, doc_ids: list[str], corpus_id: str) -> None:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         corpus = self.db.query(Corpus).filter(Corpus.id == corpus_id).first()
         if corpus is None:
             return

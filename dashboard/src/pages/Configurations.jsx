@@ -144,7 +144,7 @@ export function Configurations() {
               value={form.name}
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               placeholder="Hybrid RRF Config"
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent"
               autoFocus
             />
           </div>
@@ -155,7 +155,7 @@ export function Configurations() {
               value={form.version}
               onChange={e => setForm(f => ({ ...f, version: e.target.value }))}
               placeholder="1.0.0"
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info font-mono"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent font-mono"
             />
           </div>
           <div>
@@ -164,7 +164,7 @@ export function Configurations() {
               value={form.config}
               onChange={e => setForm(f => ({ ...f, config: e.target.value }))}
               rows={5}
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary font-mono focus:outline-none focus:border-info resize-none"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary font-mono focus:outline-none focus:border-accent resize-none"
             />
           </div>
         </div>

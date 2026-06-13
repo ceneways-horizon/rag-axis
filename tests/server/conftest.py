@@ -3,13 +3,15 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from ragaxis.server.api.dependencies import get_db
 from ragaxis.server.database.models import Base
+from ragaxis.server.main import create_app
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def db_engine():
     engine = create_engine(
         "sqlite:///:memory:",
@@ -22,18 +24,16 @@ def db_engine():
     engine.dispose()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def db_session(db_engine):
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
-    with SessionLocal() as session:
+    # SQLAlchemy convention name
+    session_local = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
+    with session_local() as session:
         yield session
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def client(db_session: Session):
-    from ragaxis.server.main import create_app
-    from ragaxis.server.api.dependencies import get_db
-
     def override_get_db():
         yield db_session
 

@@ -6,7 +6,7 @@ export function CorpusCard({ corpus, selected, onClick }) {
   return (
     <Card
       onClick={onClick}
-      className={`cursor-pointer transition-colors h-full ${selected ? 'border-info/60 bg-info/5' : ''}`}
+      className={`cursor-pointer transition-colors h-full ${selected ? 'border-accent/60 bg-accent/5' : ''}`}
     >
       <Card.Body>
         <div className="flex items-start justify-between gap-2 mb-2">

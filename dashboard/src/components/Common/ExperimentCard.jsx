@@ -6,7 +6,7 @@ import { formatDate } from '../../utils/format'
 export function ExperimentCard({ experiment, projectId }) {
   return (
     <Link to={`/projects/${projectId}/experiments/${experiment.id}`} className="block">
-      <Card className="hover:border-info/40 transition-colors h-full">
+      <Card className="hover:border-accent/40 transition-colors h-full">
         <Card.Body>
           <div className="flex items-start justify-between gap-3 mb-2">
             <h3 className="font-medium text-text-primary text-sm leading-tight">{experiment.name}</h3>

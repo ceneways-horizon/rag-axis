@@ -101,7 +101,7 @@ export function Settings() {
                 type="text"
                 value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-info max-w-md"
+                className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent max-w-md"
               />
             </div>
             <div>
@@ -110,7 +110,7 @@ export function Settings() {
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 rows={3}
-                className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-info resize-none max-w-md"
+                className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent resize-none max-w-md"
               />
             </div>
             <Button onClick={handleSave} loading={saving}>Save Changes</Button>

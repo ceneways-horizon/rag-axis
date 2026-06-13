@@ -25,7 +25,9 @@ def create_project(body: ProjectCreate, db: DbDep) -> ProjectResponse:
 def list_projects(db: DbDep) -> ProjectList:
     svc = ProjectService(db)
     projects = svc.list_all()
-    return ProjectList(items=[ProjectResponse.model_validate(p) for p in projects], total=len(projects))
+    return ProjectList(
+        items=[ProjectResponse.model_validate(p) for p in projects], total=len(projects)
+    )
 
 
 @router.get("/projects/{project_id}", response_model=ProjectResponse)

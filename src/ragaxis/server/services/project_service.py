@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from ragaxis.server.database.models import Project
 from ragaxis.server.services.base_service import BaseService
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
 
 
 class ProjectService(BaseService):
@@ -14,7 +16,7 @@ class ProjectService(BaseService):
         super().__init__(db)
 
     def create(self, name: str, description: str | None, owner_id: str | None) -> Project:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         project = Project(
             id=str(uuid.uuid4()),
             name=name,
@@ -34,7 +36,8 @@ class ProjectService(BaseService):
     def get_by_id(self, project_id: str) -> Project:
         project = self.db.query(Project).filter(Project.id == project_id).first()
         if project is None:
-            raise KeyError(f"Project '{project_id}' not found")
+            msg = f"Project '{project_id}' not found"
+            raise KeyError(msg)
         return project
 
     def delete(self, project_id: str) -> None:

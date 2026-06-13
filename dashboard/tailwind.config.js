@@ -16,6 +16,7 @@ export default {
         'warning': 'var(--color-warning)',
         'info': 'var(--color-info)',
         'cost': 'var(--color-cost)',
+        'accent': 'var(--color-accent)',
       }
     }
   },

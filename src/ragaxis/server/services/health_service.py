@@ -1,11 +1,17 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+import logging
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import text
-from sqlalchemy.orm import Session
 
 from ragaxis.server.services.base_service import BaseService
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
+
+logger = logging.getLogger(__name__)
 
 
 class HealthService(BaseService):
@@ -17,11 +23,11 @@ class HealthService(BaseService):
         try:
             self.db.execute(text("SELECT 1"))
             db_ok = True
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception:
+            logger.debug("Database health check failed", exc_info=True)
 
         return {
             "status": "ok" if db_ok else "degraded",
             "database": "ok" if db_ok else "error",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }

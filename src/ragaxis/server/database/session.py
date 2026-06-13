@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Generator
+from typing import TYPE_CHECKING
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -8,11 +8,16 @@ from sqlalchemy.orm import Session, sessionmaker
 from ragaxis.server.config import get_config
 from ragaxis.server.database.models import Base
 
-_engine = None
-_SessionLocal = None
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from sqlalchemy.engine import Engine
+
+_engine: Engine | None = None
+_session_local: sessionmaker[Session] | None = None
 
 
-def _get_engine() -> object:
+def _get_engine() -> Engine:
     global _engine  # noqa: PLW0603
     if _engine is None:
         cfg = get_config()
@@ -21,11 +26,11 @@ def _get_engine() -> object:
     return _engine
 
 
-def _get_session_factory() -> sessionmaker:  # type: ignore[type-arg]
-    global _SessionLocal  # noqa: PLW0603
-    if _SessionLocal is None:
-        _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_get_engine())
-    return _SessionLocal
+def _get_session_factory() -> sessionmaker[Session]:
+    global _session_local  # noqa: PLW0603
+    if _session_local is None:
+        _session_local = sessionmaker(autocommit=False, autoflush=False, bind=_get_engine())
+    return _session_local
 
 
 def init_db() -> None:
@@ -34,6 +39,6 @@ def init_db() -> None:
 
 
 def get_db() -> Generator[Session, None, None]:
-    SessionLocal = _get_session_factory()
-    with SessionLocal() as session:
+    session_local = _get_session_factory()  # SQLAlchemy convention name
+    with session_local() as session:
         yield session

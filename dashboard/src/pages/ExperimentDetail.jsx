@@ -114,7 +114,7 @@ export function ExperimentDetail() {
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleRunQuery()}
               placeholder="Enter a query to run..."
-              className="flex-1 bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info"
+              className="flex-1 bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent"
             />
             <Button onClick={handleRunQuery} loading={running} disabled={!query.trim()}>
               Run Query

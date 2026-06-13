@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def _new_uuid() -> str:
@@ -33,10 +33,18 @@ class Project(Base):
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
     )
 
-    corpus: Mapped[list[Corpus]] = relationship("Corpus", back_populates="project", cascade="all, delete-orphan")
-    documents: Mapped[list[Document]] = relationship("Document", back_populates="project", cascade="all, delete-orphan")
-    experiments: Mapped[list[Experiment]] = relationship("Experiment", back_populates="project", cascade="all, delete-orphan")
-    configurations: Mapped[list[Configuration]] = relationship("Configuration", back_populates="project", cascade="all, delete-orphan")
+    corpus: Mapped[list[Corpus]] = relationship(
+        "Corpus", back_populates="project", cascade="all, delete-orphan"
+    )
+    documents: Mapped[list[Document]] = relationship(
+        "Document", back_populates="project", cascade="all, delete-orphan"
+    )
+    experiments: Mapped[list[Experiment]] = relationship(
+        "Experiment", back_populates="project", cascade="all, delete-orphan"
+    )
+    configurations: Mapped[list[Configuration]] = relationship(
+        "Configuration", back_populates="project", cascade="all, delete-orphan"
+    )
 
 
 class Corpus(Base):
@@ -105,14 +113,18 @@ class Experiment(Base):
 
     project: Mapped[Project] = relationship("Project", back_populates="experiments")
     corpus: Mapped[Corpus] = relationship("Corpus", back_populates="experiments")
-    runs: Mapped[list[Run]] = relationship("Run", back_populates="experiment", cascade="all, delete-orphan")
+    runs: Mapped[list[Run]] = relationship(
+        "Run", back_populates="experiment", cascade="all, delete-orphan"
+    )
 
 
 class Run(Base):
     __tablename__ = "runs"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_new_uuid)
-    experiment_id: Mapped[str] = mapped_column(String(36), ForeignKey("experiments.id"), nullable=False)
+    experiment_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("experiments.id"), nullable=False
+    )
     project_id: Mapped[str] = mapped_column(String(36), ForeignKey("projects.id"), nullable=False)
     query: Mapped[str] = mapped_column(Text, nullable=False)
     answer: Mapped[str | None] = mapped_column(Text, nullable=True)

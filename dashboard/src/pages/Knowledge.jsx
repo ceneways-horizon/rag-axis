@@ -187,7 +187,7 @@ export function Knowledge() {
               value={form.name}
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               placeholder="My Corpus"
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent"
               autoFocus
             />
           </div>
@@ -198,7 +198,7 @@ export function Knowledge() {
               value={form.embedding_model_id}
               onChange={e => setForm(f => ({ ...f, embedding_model_id: e.target.value }))}
               placeholder="text-embedding-3-small"
-              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-info font-mono"
+              className="w-full bg-bg-tertiary border border-border-color rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent font-mono"
             />
           </div>
         </div>

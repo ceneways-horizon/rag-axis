@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import json
-from typing import Annotated, Any
+from typing import TYPE_CHECKING, Annotated, Any, cast
 
 from fastapi import APIRouter, BackgroundTasks, Depends, status
+from sqlalchemy.engine import Connection
 from sqlalchemy.orm import Session
 
 from ragaxis.server.api.dependencies import get_db
@@ -20,10 +21,13 @@ from ragaxis.server.api.schemas.experiment_schemas import (
     RunRequest,
     RunResponse,
 )
-from ragaxis.server.database.models import Run
 from ragaxis.server.jobs.query_execution_job import run_query_execution_job
+from ragaxis.server.jobs.queue import create_job
 from ragaxis.server.services.experiment_service import ExperimentService
 from ragaxis.server.services.metric_service import MetricService
+
+if TYPE_CHECKING:
+    from ragaxis.server.database.models import Run
 
 router = APIRouter(tags=["experiments"])
 
@@ -32,9 +36,11 @@ DbDep = Annotated[Session, Depends(get_db)]
 
 def _parse_config(config_json: str) -> dict[str, Any]:
     try:
-        return json.loads(config_json)
+        result = json.loads(config_json)
     except (json.JSONDecodeError, TypeError):
         return {}
+    else:
+        return cast("dict[str, Any]", result)
 
 
 def _run_to_response(run: Run) -> RunResponse:
@@ -84,9 +90,7 @@ def _run_to_response(run: Run) -> RunResponse:
     response_model=ExperimentResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def create_experiment(
-    project_id: str, body: ExperimentCreate, db: DbDep
-) -> ExperimentResponse:
+def create_experiment(project_id: str, body: ExperimentCreate, db: DbDep) -> ExperimentResponse:
     svc = ExperimentService(db)
     exp = svc.create(project_id, body.name, body.description, body.corpus_id, body.config)
     return ExperimentResponse(
@@ -123,9 +127,7 @@ def list_experiments(project_id: str, db: DbDep) -> ExperimentList:
     return ExperimentList(items=items, total=len(items))
 
 
-@router.get(
-    "/projects/{project_id}/experiments/{experiment_id}", response_model=ExperimentResponse
-)
+@router.get("/projects/{project_id}/experiments/{experiment_id}", response_model=ExperimentResponse)
 def get_experiment(project_id: str, experiment_id: str, db: DbDep) -> ExperimentResponse:
     svc = ExperimentService(db)
     exp = svc.get_by_id(project_id, experiment_id)
@@ -157,12 +159,12 @@ def execute_run(
     svc = ExperimentService(db)
     svc.get_by_id(project_id, experiment_id)
 
-    db_url = db.get_bind().url
+    bind = db.get_bind()
+    engine = bind.engine if isinstance(bind, Connection) else bind
+    db_url = engine.url
     background_tasks.add_task(
         run_query_execution_job, project_id, experiment_id, body.query, db_url
     )
-
-    from ragaxis.server.jobs.queue import create_job
 
     job_id = create_job(
         "query_execution",
@@ -171,9 +173,7 @@ def execute_run(
     return JobAccepted(job_id=job_id, message="Query accepted, executing in background")
 
 
-@router.get(
-    "/projects/{project_id}/experiments/{experiment_id}/runs", response_model=RunList
-)
+@router.get("/projects/{project_id}/experiments/{experiment_id}/runs", response_model=RunList)
 def list_runs(project_id: str, experiment_id: str, db: DbDep) -> RunList:
     svc = ExperimentService(db)
     runs = svc.list_runs(project_id, experiment_id)

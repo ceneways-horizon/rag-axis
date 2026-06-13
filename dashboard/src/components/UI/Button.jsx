@@ -1,7 +1,7 @@
 import { LoadingSpinner } from './LoadingSpinner'
 
 const variantClasses = {
-  primary: 'bg-info text-white hover:bg-blue-600 border border-transparent',
+  primary: 'bg-accent text-white hover:bg-red-700 border border-transparent',
   secondary: 'bg-bg-tertiary text-text-primary hover:bg-bg-secondary border border-border-color',
   danger: 'bg-error text-white hover:bg-red-600 border border-transparent',
 }
