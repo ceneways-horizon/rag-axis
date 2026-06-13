@@ -94,7 +94,7 @@ export function Sidebar() {
       </nav>
 
       <div className="px-3 py-3 border-t border-border-color">
-        <span className="text-xs text-text-muted">v0.1.1 pre-alpha</span>
+        <span className="text-xs text-text-muted">v0.0.2 pre-alpha</span>
       </div>
     </aside>
   )
