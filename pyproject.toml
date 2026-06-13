@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rag-axis"
-version = "0.0.1"
+version = "0.1.1"
 description = "Production contract layer for RAG systems — typed, explicit, observable, composable."
 readme = "README.md"
 license = { text = "MIT" }

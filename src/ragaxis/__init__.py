@@ -7,7 +7,7 @@ See: docs/internal/contracts/
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # Phase 0 public surface — populated as packages are implemented
 from ragaxis.core import (
