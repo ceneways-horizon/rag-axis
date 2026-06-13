@@ -8,6 +8,16 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.heroBanner :global(.hero__title) {
+  color: #ffffff;
+}
+
+.heroBanner :global(.hero__subtitle) {
+  color: var(--ifm-color-primary-light);
 }
 
 @media screen and (max-width: 996px) {

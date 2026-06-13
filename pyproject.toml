@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rag-axis"
-version = "0.0.1"
+version = "0.0.2"
 description = "Production contract layer for RAG systems — typed, explicit, observable, composable."
 readme = "README.md"
 license = { text = "MIT" }
@@ -31,9 +31,10 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/saiharsha-k/rag-axis"
-Documentation = "https://docs.saiharshakondaveeti.com"
-Changelog = "https://github.com/saiharsha-k/rag-axis/blob/main/CHANGELOG.md"
+Homepage = "https://ragaxis.cenewayshorizon.com"
+Repository = "https://github.com/ceneways-horizon/rag-axis"
+Documentation = "https://ragaxis.cenewayshorizon.com"
+Changelog = "https://github.com/ceneways-horizon/rag-axis/blob/main/CHANGELOG.md"
 
 # Optional dependency groups
 [project.optional-dependencies]
