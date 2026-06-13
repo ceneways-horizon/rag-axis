@@ -1,12 +1,12 @@
 # docs/
 
-Documentation for rag-axis, organized into three folders.
+Documentation for rag-axis, organized into two folders plus the public documentation site at the project root.
 
 | Folder | Audience | Tool | Purpose |
 |---|---|---|---|
-| `shared/` | Both | Source of truth | Invariants, architecture, glossary — never duplicated |
+| `shared/` | Both | Source of truth | Invariants, architecture, glossary, never duplicated |
 | `internal/` | Team only | MkDocs | ADRs, contracts, stubs, checklists, debug guides |
-| `public/` | External users | Mintlify | Getting started, concepts, API reference, guides |
+| `docs/` (this directory) | External users | Docusaurus | Getting started, concepts, API reference, guides, examples |
 
 ---
 
@@ -19,22 +19,30 @@ mkdocs serve -f docs/internal/mkdocs.yml
 
 Opens at **http://127.0.0.1:8000**
 
-The site includes `internal/` and `shared/` only. `public/` is never included.
+The site includes `internal/` and `shared/` only. The public documentation site is never included.
 
 ---
 
-## Public Docs (Mintlify)
+## Running Public Docs (Docusaurus)
 
-Public docs are in `docs/public/` and configured via `docs/public/mint.json`.
-
-They deploy automatically on merge to `main` via Mintlify CI.
-
-To preview locally:
+The public documentation site is a Docusaurus project rooted at `docs/`, with its content under `docs/docs/`.
 
 ```bash
-npm i -g mintlify
-mintlify dev --port 3000
+cd docs
+npm install
+npm run start
 ```
+
+Opens at **http://localhost:3000**
+
+To build the static site:
+
+```bash
+cd docs
+npm run build
+```
+
+The output is written to `docs/build/`.
 
 ---
 
@@ -42,29 +50,17 @@ mintlify dev --port 3000
 
 `docs/shared/` is the single source of truth for:
 
-- **invariants.md** — I1-I7 definitions
-- **architecture.md** — three-layer model
-- **packages.md** — package responsibility matrix
-- **philosophy.md** — design principles
-- **glossary.md** — authoritative term definitions
+- **invariants.md**, I1-I7 definitions
+- **architecture.md**, the three-layer model
+- **packages.md**, package responsibility matrix
+- **philosophy.md**, design principles
+- **glossary.md**, authoritative term definitions
 
-Both internal and public docs **cross-link** to shared content.
-Never copy-paste from shared/ — link to it.
+Both internal and public docs cross-link to shared content.
+Never copy-paste from shared/, link to it instead.
 
 ---
 
-## Legacy Source Folders
+## Deployment
 
-The following folders contain the **original** source files and are preserved intact.
-Their content has been **copied** (not deleted) to the new structure.
-
-| Original | Moved to | Status |
-|---|---|---|
-| `docs/adr/` | `docs/internal/design-decisions/` | Preserved |
-| `docs/architecture/` | `docs/shared/` | Preserved |
-| `docs/concepts/` | `docs/public/concepts/` | Preserved |
-| `docs/contributing/` | `docs/public/guides/contributing-*.md` | Preserved |
-| `docs/introduction/` | `docs/public/getting-started/` | Preserved |
-| `docs/ARCHITECTURE.md` | `docs/shared/full-architecture.md` | Preserved |
-
-These legacy folders will be removed once the new structure is confirmed correct.
+The public documentation site deploys to Vercel, configured via `docs/vercel.json`. The Vercel project root directory is set to `docs`, and the site is hosted at `ragaxis.cenewayshorizon.com`.
