@@ -1,10 +1,10 @@
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 function NavItem({ to, label, icon }) {
   return (
     <NavLink
       to={to}
-      end={to.split('/').length <= 2}
+      end
       className={({ isActive }) =>
         `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
           isActive
@@ -19,13 +19,13 @@ function NavItem({ to, label, icon }) {
   )
 }
 
-const ProjectIcon = () => (
+const OverviewIcon = () => (
   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
   </svg>
 )
 
-const KnowledgeIcon = () => (
+const CorporaIcon = () => (
   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
   </svg>
@@ -37,16 +37,15 @@ const ExperimentIcon = () => (
   </svg>
 )
 
-const ConfigIcon = () => (
+const PlaygroundIcon = () => (
   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
   </svg>
 )
 
-const SettingsIcon = () => (
+const RunsIcon = () => (
   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
   </svg>
 )
 
@@ -57,40 +56,22 @@ const HealthIcon = () => (
 )
 
 export function Sidebar() {
-  const { projectId } = useParams()
-
   return (
     <aside className="fixed left-0 top-0 h-full w-56 bg-bg-secondary border-r border-border-color flex flex-col z-30">
       <div className="px-4 py-4 border-b border-border-color">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-text-primary text-base tracking-tight">RAG Axis</span>
         </div>
+        <p className="text-xs text-text-muted mt-0.5">Operator Playground</p>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        <NavItem to="/projects" label="Projects" icon={<ProjectIcon />} />
-        <NavItem to="/health" label="Health" icon={<HealthIcon />} />
-
-        {projectId && (
-          <>
-            <div className="pt-3 pb-1 px-3">
-              <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Project</span>
-            </div>
-            <NavItem
-              to={`/projects/${projectId}`}
-              label="Dashboard"
-              icon={
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              }
-            />
-            <NavItem to={`/projects/${projectId}/knowledge`} label="Knowledge" icon={<KnowledgeIcon />} />
-            <NavItem to={`/projects/${projectId}/experiments`} label="Experiments" icon={<ExperimentIcon />} />
-            <NavItem to={`/projects/${projectId}/configs`} label="Configurations" icon={<ConfigIcon />} />
-            <NavItem to={`/projects/${projectId}/settings`} label="Settings" icon={<SettingsIcon />} />
-          </>
-        )}
+        <NavItem to="/" label="Overview" icon={<OverviewIcon />} />
+        <NavItem to="/corpora" label="Corpora" icon={<CorporaIcon />} />
+        <NavItem to="/experiments" label="Experiments" icon={<ExperimentIcon />} />
+        <NavItem to="/playground" label="Playground" icon={<PlaygroundIcon />} />
+        <NavItem to="/runs" label="Runs" icon={<RunsIcon />} />
+        <NavItem to="/health" label="Server / Health" icon={<HealthIcon />} />
       </nav>
 
       <div className="px-3 py-3 border-t border-border-color">

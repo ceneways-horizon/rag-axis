@@ -2,13 +2,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Sidebar } from './components/Layout/Sidebar'
 import { ToastContainer } from './components/UI/Toast'
 import {
-  Projects,
-  ProjectDashboard,
-  Knowledge,
+  Overview,
+  Corpora,
+  CorpusDetail,
   Experiments,
   ExperimentDetail,
-  Configurations,
-  Settings,
+  ExperimentCompare,
+  Playground,
+  Runs,
   Health,
 } from './pages'
 
@@ -28,16 +29,16 @@ export function App() {
     <BrowserRouter>
       <AppLayout>
         <Routes>
-          <Route path="/" element={<Navigate to="/projects" replace />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:projectId" element={<ProjectDashboard />} />
-          <Route path="/projects/:projectId/knowledge" element={<Knowledge />} />
-          <Route path="/projects/:projectId/experiments" element={<Experiments />} />
-          <Route path="/projects/:projectId/experiments/:experimentId" element={<ExperimentDetail />} />
-          <Route path="/projects/:projectId/configs" element={<Configurations />} />
-          <Route path="/projects/:projectId/settings" element={<Settings />} />
+          <Route path="/" element={<Overview />} />
+          <Route path="/corpora" element={<Corpora />} />
+          <Route path="/corpora/:corpusId" element={<CorpusDetail />} />
+          <Route path="/experiments" element={<Experiments />} />
+          <Route path="/experiments/compare" element={<ExperimentCompare />} />
+          <Route path="/experiments/:expId" element={<ExperimentDetail />} />
+          <Route path="/playground" element={<Playground />} />
+          <Route path="/runs" element={<Runs />} />
           <Route path="/health" element={<Health />} />
-          <Route path="*" element={<Navigate to="/projects" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AppLayout>
       <ToastContainer />

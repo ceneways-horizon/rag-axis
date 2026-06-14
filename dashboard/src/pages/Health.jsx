@@ -1,9 +1,15 @@
+import { useState } from 'react'
 import { Header } from '../components/Layout/Header'
 import { Card } from '../components/UI/Card'
 import { Badge } from '../components/UI/Badge'
+import { Button } from '../components/UI/Button'
 import { LoadingSpinner } from '../components/UI/LoadingSpinner'
-import { useHealth, useTelemetry } from '../hooks/useMetrics'
-import { formatNumber, formatDuration } from '../utils/format'
+import { useToast } from '../components/UI/Toast'
+import { ErrorCard } from '../components/Common'
+import { useHealth, useConfig } from '../hooks'
+import * as api from '../api'
+import { formatNumber, formatDuration, formatDateTime } from '../utils/format'
+import { safeJsonStringify } from '../utils/helpers'
 
 function InfoRow({ label, value }) {
   return (
@@ -14,109 +20,95 @@ function InfoRow({ label, value }) {
   )
 }
 
-export function Health() {
-  const { health, loading: hLoading, error: hError } = useHealth()
-  const { telemetry, loading: tLoading } = useTelemetry()
+function AdapterRow({ name, adapter, onTest, testing }) {
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-border-color/50 last:border-0">
+      <div>
+        <p className="text-sm text-text-primary font-medium capitalize">{name.replace(/_/g, ' ')}</p>
+        <p className="text-xs font-mono text-text-muted">{adapter.name}</p>
+        <p className="text-xs text-text-muted mt-0.5">Last tested: {formatDateTime(adapter.last_tested)}</p>
+      </div>
+      <div className="flex items-center gap-3">
+        <Badge status={adapter.status}>{adapter.status}</Badge>
+        <Button size="sm" variant="secondary" onClick={() => onTest(name)} loading={testing}>Test</Button>
+      </div>
+    </div>
+  )
+}
 
-  const status = health?.status || 'unknown'
-  const isHealthy = status === 'healthy' || status === 'ok'
+export function Health() {
+  const { health, loading, error, refetch } = useHealth()
+  const { config, loading: configLoading, error: configError } = useConfig()
+  const toast = useToast()
+  const [testing, setTesting] = useState(null)
+  const [testError, setTestError] = useState(null)
+
+  const handleTest = async (name) => {
+    setTesting(name)
+    setTestError(null)
+    try {
+      const result = await api.testAdapter(name)
+      toast.success(`${name}: ${result.status} (${result.latency_ms}ms)`)
+      refetch()
+    } catch (e) {
+      setTestError(e)
+      toast.error(`${name} test failed: ${e.message}`)
+    } finally {
+      setTesting(null)
+    }
+  }
+
+  if (loading) return <LoadingSpinner size="lg" className="mt-16" />
+  if (error) return <ErrorCard error={error} title="Failed to load health" />
+  if (!health) return null
 
   return (
     <div>
-      <Header title="System Health" subtitle="Backend status and telemetry" />
+      <Header title="Server / Health" subtitle="Adapter health, DB backend, and config-in-effect" />
 
       <div className="space-y-6">
         <Card>
           <Card.Header>
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-text-primary">System Status</h2>
-              {!hLoading && health && (
-                <Badge status={isHealthy ? 'active' : 'degraded'}>
-                  {isHealthy ? 'healthy' : 'degraded'}
-                </Badge>
-              )}
+              <h2 className="text-sm font-semibold text-text-primary">Server Status</h2>
+              <Badge status={health.status}>{health.status}</Badge>
             </div>
           </Card.Header>
           <Card.Body>
-            {hLoading && <LoadingSpinner size="sm" />}
-            {hError && (
-              <div className="flex items-center gap-2">
-                <Badge status="error">error</Badge>
-                <span className="text-sm text-error">{hError}</span>
-              </div>
-            )}
-            {!hLoading && !hError && health && (
-              <div>
-                <InfoRow label="Status" value={<Badge status={isHealthy ? 'active' : 'degraded'}>{status}</Badge>} />
-                {health.version && <InfoRow label="Version" value={health.version} />}
-                {health.uptime_seconds != null && (
-                  <InfoRow label="Uptime" value={formatDuration(health.uptime_seconds * 1000)} />
-                )}
-                {health.database && (
-                  <InfoRow
-                    label="Database"
-                    value={<Badge status={health.database === 'ok' ? 'active' : 'error'}>{health.database}</Badge>}
-                  />
-                )}
-                {health.environment && <InfoRow label="Environment" value={health.environment} />}
-              </div>
-            )}
+            <InfoRow label="Version" value={health.server_version} />
+            <InfoRow label="Uptime" value={formatDuration(health.uptime_seconds * 1000)} />
+            <InfoRow label="Requests (last hour)" value={formatNumber(health.request_rate_last_hour)} />
           </Card.Body>
         </Card>
 
-        {health?.adapters && Object.keys(health.adapters).length > 0 && (
-          <Card>
-            <Card.Header>
-              <h2 className="text-sm font-semibold text-text-primary">Adapters</h2>
-            </Card.Header>
-            <Card.Body>
-              {Object.entries(health.adapters).map(([name, adapterStatus]) => (
-                <InfoRow
-                  key={name}
-                  label={name.replace(/_/g, ' ')}
-                  value={
-                    <Badge status={adapterStatus === true || adapterStatus === 'ok' ? 'active' : 'error'}>
-                      {adapterStatus === true || adapterStatus === 'ok' ? 'ok' : 'error'}
-                    </Badge>
-                  }
-                />
-              ))}
-            </Card.Body>
-          </Card>
-        )}
+        <Card>
+          <Card.Header><h2 className="text-sm font-semibold text-text-primary">Database</h2></Card.Header>
+          <Card.Body>
+            <InfoRow label="Backend" value={<span className="font-mono">{health.db.backend}</span>} />
+            <InfoRow label="Connected" value={<Badge status={health.db.connected ? 'healthy' : 'unhealthy'}>{health.db.connected ? 'connected' : 'disconnected'}</Badge>} />
+            <InfoRow label="Location" value={<span className="font-mono text-xs">{health.db.location}</span>} />
+          </Card.Body>
+        </Card>
 
         <Card>
-          <Card.Header>
-            <h2 className="text-sm font-semibold text-text-primary">Request Telemetry</h2>
-          </Card.Header>
+          <Card.Header><h2 className="text-sm font-semibold text-text-primary">Adapters</h2></Card.Header>
           <Card.Body>
-            {tLoading && <LoadingSpinner size="sm" />}
-            {!tLoading && !telemetry && (
-              <p className="text-sm text-text-muted">No telemetry data available</p>
-            )}
-            {!tLoading && telemetry && (
-              <div>
-                {telemetry.total_requests != null && (
-                  <InfoRow label="Total Requests" value={formatNumber(telemetry.total_requests)} />
-                )}
-                {telemetry.success_rate != null && (
-                  <InfoRow label="Success Rate" value={`${(telemetry.success_rate * 100).toFixed(1)}%`} />
-                )}
-                {telemetry.avg_latency_ms != null && (
-                  <InfoRow label="Avg Latency" value={formatDuration(telemetry.avg_latency_ms)} />
-                )}
-                {telemetry.error_rate != null && (
-                  <InfoRow label="Error Rate" value={`${(telemetry.error_rate * 100).toFixed(1)}%`} />
-                )}
-                {telemetry.requests_per_minute != null && (
-                  <InfoRow label="Req / Min" value={formatNumber(telemetry.requests_per_minute)} />
-                )}
-                {Object.entries(telemetry)
-                  .filter(([k]) => !['total_requests', 'success_rate', 'avg_latency_ms', 'error_rate', 'requests_per_minute'].includes(k))
-                  .map(([k, v]) => (
-                    <InfoRow key={k} label={k.replace(/_/g, ' ')} value={String(v)} />
-                  ))}
-              </div>
+            {testError && <div className="mb-3"><ErrorCard error={testError} title="Adapter test failed" /></div>}
+            {Object.entries(health.adapters).map(([name, adapter]) => (
+              <AdapterRow key={name} name={name} adapter={adapter} onTest={handleTest} testing={testing === name} />
+            ))}
+          </Card.Body>
+        </Card>
+
+        <Card>
+          <Card.Header><h2 className="text-sm font-semibold text-text-primary">Config in Effect</h2></Card.Header>
+          <Card.Body>
+            {configLoading && <LoadingSpinner size="sm" />}
+            {configError && <ErrorCard error={configError} title="Failed to load config" />}
+            {!configLoading && !configError && config && (
+              <pre className="text-xs font-mono text-text-secondary bg-bg-tertiary rounded p-4 overflow-x-auto whitespace-pre-wrap break-words">
+                {safeJsonStringify(config)}
+              </pre>
             )}
           </Card.Body>
         </Card>

@@ -1,34 +1,28 @@
+const BASE = '/api/v1'
+
 export const API = {
-  HEALTH: '/health',
-  TELEMETRY: '/api/telemetry',
-  PROJECTS: {
-    LIST: '/api/projects',
-    CREATE: '/api/projects',
-    GET: (id) => `/api/projects/${id}`,
-    DELETE: (id) => `/api/projects/${id}`,
-  },
-  KNOWLEDGE: {
-    CORPUS_LIST: (pid) => `/api/projects/${pid}/knowledge/corpus`,
-    CORPUS_CREATE: (pid) => `/api/projects/${pid}/knowledge/corpus`,
-    CORPUS_GET: (pid, cid) => `/api/projects/${pid}/knowledge/corpus/${cid}`,
-    DOCS_LIST: (pid) => `/api/projects/${pid}/knowledge/documents`,
-    DOCS_UPLOAD: (pid) => `/api/projects/${pid}/knowledge/documents`,
-    DOC_DELETE: (pid, did) => `/api/projects/${pid}/knowledge/documents/${did}`,
+  OVERVIEW: `${BASE}/overview`,
+  CORPORA: {
+    LIST: `${BASE}/corpora`,
+    INGEST: `${BASE}/corpora/ingest`,
+    INGEST_JOB: (jobId) => `${BASE}/corpora/ingest/${jobId}`,
+    GET: (corpusId) => `${BASE}/corpora/${corpusId}`,
+    REINDEX: (corpusId) => `${BASE}/corpora/${corpusId}/reindex`,
   },
   EXPERIMENTS: {
-    LIST: (pid) => `/api/projects/${pid}/experiments`,
-    CREATE: (pid) => `/api/projects/${pid}/experiments`,
-    GET: (pid, eid) => `/api/projects/${pid}/experiments/${eid}`,
-    RUN: (pid, eid) => `/api/projects/${pid}/experiments/${eid}/run`,
-    RUNS_LIST: (pid, eid) => `/api/projects/${pid}/experiments/${eid}/runs`,
-    RUN_GET: (pid, eid, rid) => `/api/projects/${pid}/experiments/${eid}/runs/${rid}`,
-    METRICS: (pid, eid) => `/api/projects/${pid}/experiments/${eid}/metrics`,
+    LIST: `${BASE}/experiments`,
+    CREATE: `${BASE}/experiments`,
+    GET: (expId) => `${BASE}/experiments/${expId}`,
+    COMPARE: `${BASE}/experiments/compare`,
   },
-  CONFIGS: {
-    LIST: (pid) => `/api/projects/${pid}/configs`,
-    CREATE: (pid) => `/api/projects/${pid}/configs`,
-    GET: (pid, cid) => `/api/projects/${pid}/configs/${cid}`,
-    PROMOTE: (pid, cid) => `/api/projects/${pid}/configs/${cid}/promote`,
-    DELETE: (pid, cid) => `/api/projects/${pid}/configs/${cid}`,
+  QUERY: `${BASE}/query`,
+  RUNS: {
+    LIST: `${BASE}/runs`,
+    GET: (runId) => `${BASE}/runs/${runId}`,
   },
+  HEALTH: `${BASE}/health`,
+  ADAPTER_TEST: (name) => `${BASE}/health/adapters/${name}/test`,
+  CONFIG: `${BASE}/config`,
 }
+
+export default API

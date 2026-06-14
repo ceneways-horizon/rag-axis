@@ -5,11 +5,18 @@ const client = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+// Normalizes the RagAxisError envelope: { error: { type, message, degraded, context } }
 client.interceptors.response.use(
   res => res,
   err => {
-    const message = err.response?.data?.error?.message || err.message || 'Unknown error'
-    return Promise.reject(new Error(message))
+    const envelope = err.response?.data?.error
+    const message = envelope?.message || err.message || 'Unknown error'
+    const normalized = new Error(message)
+    normalized.type = envelope?.type || 'TransportError'
+    normalized.degraded = envelope?.degraded ?? false
+    normalized.context = envelope?.context ?? null
+    normalized.status = err.response?.status ?? null
+    return Promise.reject(normalized)
   }
 )
 
