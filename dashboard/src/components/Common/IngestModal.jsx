@@ -173,7 +173,13 @@ export function IngestModal({ open, onClose, onComplete, corpusId, title = 'Inge
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-text-secondary">
-              {progress?.current_file ? `Processing ${progress.current_file}` : 'Starting…'}
+              {progress?.current_file
+                ? `Processing ${progress.current_file}`
+                : progress?.status === 'completed'
+                  ? 'Ingest complete'
+                  : progress?.status === 'failed'
+                    ? 'Ingest failed'
+                    : 'Starting…'}
             </span>
             {progress && <Badge status={progress.status}>{progress.status}</Badge>}
           </div>

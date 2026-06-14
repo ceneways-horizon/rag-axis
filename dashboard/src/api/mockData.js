@@ -372,6 +372,8 @@ export function getRunsList({ exp_id, status, limit = 20, offset = 0 } = {}) {
 }
 
 function buildSeedFull(summary) {
+  if (summary.status === 'failed') return null
+
   const exp = experimentsList.find(e => e.exp_id === summary.exp_id)
   return {
     run_id: summary.run_id,
@@ -381,8 +383,8 @@ function buildSeedFull(summary) {
     citations: [
       { chunk_id: 'chunk_001', source: 'sec-filing-2026.pdf', confidence: 0.9, text: 'Relevant excerpt supporting the answer.' },
     ],
-    confidence: summary.status === 'failed' ? 0.0 : 0.85,
-    retrieval_quality: summary.status === 'failed' ? 0.0 : 0.8,
+    confidence: 0.85,
+    retrieval_quality: 0.8,
     cost: {
       embedding_cost: 0.001,
       retrieval_cost: 0.0,
@@ -416,7 +418,7 @@ function buildSeedFull(summary) {
       synthesis_config: exp?.frozen_config?.synthesis || {},
       run_timestamp: summary.timestamp,
     },
-    status: summary.status === 'failed' ? 'failed' : summary.status,
+    status: summary.status,
   }
 }
 
@@ -430,6 +432,18 @@ export function getRunDetail(runId) {
     err.status = 404
     throw err
   }
+
+  // A failed run produced no RunResult — it is reported as a fatal
+  // RagAxisError envelope, not a degraded result with zeroed scores.
+  if (entry.status === 'failed') {
+    const err = new Error(`Run '${runId}' failed during generation: the LLM provider returned a schema error and no answer was produced.`)
+    err.type = 'ProviderSchemaError'
+    err.degraded = false
+    err.status = 502
+    err.context = { run_id: runId, exp_id: entry.exp_id, stage: 'generation' }
+    throw err
+  }
+
   return entry._full
 }
 

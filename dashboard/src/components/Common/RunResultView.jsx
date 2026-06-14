@@ -2,6 +2,7 @@ import { Badge } from '../UI/Badge'
 import { Disclosure } from './Disclosure'
 import { formatCost, formatPercent, formatDateTime, formatNumber } from '../../utils/format'
 import { safeJsonStringify } from '../../utils/helpers'
+import { confidenceVariant } from '../../utils/constants'
 
 function ScoreList({ label, scores }) {
   if (!scores || scores.length === 0) return null
@@ -28,6 +29,13 @@ const statusVariant = {
   success: 'success',
   degraded: 'warning',
   failed: 'error',
+}
+
+const confidenceTextClass = {
+  success: 'text-success',
+  warning: 'text-warning',
+  error: 'text-error',
+  muted: 'text-text-muted',
 }
 
 // Renders a full RunResult per the Dashboard Server API Contract v1 — the
@@ -81,7 +89,7 @@ export function RunResultView({ result }) {
               <div key={c.chunk_id || i} className="bg-bg-tertiary rounded p-3">
                 <div className="flex items-center justify-between mb-1 gap-2">
                   <span className="text-xs font-mono text-info truncate">[{i + 1}] {c.source}</span>
-                  <Badge variant={c.confidence >= 0.8 ? 'success' : c.confidence >= 0.5 ? 'warning' : 'error'}>
+                  <Badge variant={confidenceVariant(c.confidence)}>
                     {formatPercent(c.confidence)}
                   </Badge>
                 </div>
@@ -95,11 +103,11 @@ export function RunResultView({ result }) {
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-bg-tertiary rounded p-3">
           <p className="text-xs text-text-muted uppercase tracking-wider mb-1">Confidence</p>
-          <p className="text-lg font-semibold text-text-primary">{formatPercent(confidence)}</p>
+          <p className={`text-lg font-semibold ${confidenceTextClass[confidenceVariant(confidence)]}`}>{formatPercent(confidence)}</p>
         </div>
         <div className="bg-bg-tertiary rounded p-3">
           <p className="text-xs text-text-muted uppercase tracking-wider mb-1">Retrieval Quality</p>
-          <p className="text-lg font-semibold text-text-primary">{formatPercent(retrieval_quality)}</p>
+          <p className={`text-lg font-semibold ${confidenceTextClass[confidenceVariant(retrieval_quality)]}`}>{formatPercent(retrieval_quality)}</p>
         </div>
       </div>
 
