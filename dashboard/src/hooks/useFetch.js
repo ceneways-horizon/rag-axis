@@ -12,7 +12,7 @@ export function useFetch(fetchFn, deps = []) {
       const result = await fetchFn()
       setData(result)
     } catch (e) {
-      setError(e.message)
+      setError(e)
     } finally {
       setLoading(false)
     }
